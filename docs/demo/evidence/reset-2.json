@@ -1,0 +1,257 @@
+{
+  "ok": true,
+  "dataset": {
+    "key": "genesee-press-v1",
+    "company_name": "Genesee Press",
+    "domain": "corp.geneseepress.example",
+    "snapshot_date": "2026-10-01",
+    "seed": "genesee-press-v1",
+    "synthetic": true,
+    "description": "Genesee Press: a fictional company founded 2016, ten years of directory and file-server history, scanned three times by ADG in September and October 2026. Its people, accounts, groups and servers come from the shared synthetic world (40ozs/synthetic-enterprise); its file estate is ADG's own.",
+    "facts": {
+      "Founded": "2016-10-01",
+      "Active employees": "1,800",
+      "Former employees": "640",
+      "Departments": "14",
+      "Groups": "205",
+      "File servers": "33",
+      "Shares": "91",
+      "Folders": "824",
+      "NTFS entries": "4,111",
+      "Scan generations": "3",
+      "Scan runs": "300",
+      "Observations": "41,756"
+    }
+  },
+  "database": "adg_demo",
+  "initialized": false,
+  "generations": {
+    "applied": [
+      "g1",
+      "g2",
+      "g3"
+    ],
+    "baseline": 3,
+    "total": 3,
+    "canonical": true
+  },
+  "runs": {
+    "total": 300,
+    "observations_applied": 41756,
+    "recorded_statuses": {
+      "failed": 2,
+      "partial": 1,
+      "succeeded": 297
+    },
+    "by_generation": [
+      {
+        "name": "g1",
+        "runs": 100,
+        "observations_applied": 13765,
+        "recorded_statuses": {
+          "failed": 1,
+          "succeeded": 99
+        }
+      },
+      {
+        "name": "g2",
+        "runs": 100,
+        "observations_applied": 14052,
+        "recorded_statuses": {
+          "succeeded": 100
+        }
+      },
+      {
+        "name": "g3",
+        "runs": 100,
+        "observations_applied": 13939,
+        "recorded_statuses": {
+          "failed": 1,
+          "partial": 1,
+          "succeeded": 98
+        }
+      }
+    ],
+    "not_succeeded": [
+      {
+        "name": "g1-ntfs-gp-sec-fs01",
+        "collector": "ntfs",
+        "claimed_status": "failed",
+        "recorded_status": "failed"
+      },
+      {
+        "name": "g3-ntfs-gp-fs-03",
+        "collector": "ntfs",
+        "claimed_status": "failed",
+        "recorded_status": "failed"
+      },
+      {
+        "name": "g3-ntfs-gp-mig-fs01",
+        "collector": "ntfs",
+        "claimed_status": "partial",
+        "recorded_status": "partial"
+      }
+    ]
+  },
+  "probes": {
+    "checked": true,
+    "present": 23,
+    "total": 23,
+    "results": [
+      {
+        "kind": "principal",
+        "description": "an active Finance employee",
+        "present": true
+      },
+      {
+        "kind": "ntfs_resource",
+        "description": "A: the Design share root",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "A: sec-share-design-write on the Design root",
+        "present": true
+      },
+      {
+        "kind": "share",
+        "description": "B: the Finance share",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "B: Finance-RW nested in GG_Finance_RW",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "B: GG_Finance_RW on the Finance root",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "C: Engineering-FS on the Engineering root",
+        "present": true
+      },
+      {
+        "kind": "share",
+        "description": "D: the People share",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "D: sec-share-people-write on the People root",
+        "present": true
+      },
+      {
+        "kind": "ntfs_resource",
+        "description": "E: the Archive share root",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "E: deleted Project-Vega still named on Archive\\Projects-2019",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "F: Sales-Ops nested in Revenue-Reporting",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "F: the transferred employee's direct entry on Finance\\Reports\\Revenue",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 1 of 6",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 2 of 6",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 3 of 6",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 4 of 6",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 5 of 6",
+        "present": true
+      },
+      {
+        "kind": "membership",
+        "description": "G: chain link 6 of 6",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "G: Share_Engineering_Modify on Runbooks\\Payments-Legacy",
+        "present": true
+      },
+      {
+        "kind": "ntfs_ace",
+        "description": "H: Proj-Zephyr-RW on Engineering\\Projects\\Zephyr",
+        "present": true
+      },
+      {
+        "kind": "ntfs_resource",
+        "description": "history: Wave-3-Staging survives the partial 2026-10-01 scan of GP-MIG-FS01",
+        "present": true
+      },
+      {
+        "kind": "ntfs_resource",
+        "description": "history: GP-FS-03's folders survive its failed 2026-10-01 scan",
+        "present": true
+      }
+    ]
+  },
+  "risk": {
+    "evaluated_at": "2026-10-01T06:00:00+00:00",
+    "matched": 9666,
+    "opened": 9386,
+    "reopened": 0,
+    "resolved": 0,
+    "complete": true,
+    "truncated": []
+  },
+  "risk_findings_open": 9386,
+  "counts": {
+    "current_principal": 2139,
+    "current_membership_edge": 6224,
+    "current_server": 33,
+    "current_smb_share": 124,
+    "current_smb_ace": 606,
+    "current_ntfs_resource": 826,
+    "current_ntfs_ace": 4117,
+    "object_versions": 14316,
+    "scan_runs": 300,
+    "tombstones_open": 70
+  },
+  "fingerprint": "4667d3cfb4b574ffda3ac7ea8453912568b7517cd53548fb338b497e9b270f08",
+  "digests": {
+    "current:principal": "e64e3c0c0d67fca4cda9ecd0ab74693703bdb929f467a2ffabf03448e4f146ef",
+    "current:membership_edge": "e131cf25be713b94b55add1da3c65d27f3b25910889cd6d03aa1fde3f82a5c9b",
+    "current:server": "6f25c961171a6ac8673339374d098c20af4841f428efa8713a400a1af75e8d95",
+    "current:smb_share": "5610e64c974b628fbd8ed31459539243481cdd78ff5c4c773cecb89fa5b9ed42",
+    "current:smb_ace": "260c072bd557b6ea0322b667c810513328662b84df38dcb9cb6f7de2a7be5283",
+    "current:ntfs_resource": "80319103e2221c88aca0edc6a9e2c9913b7c5c3c1a0a6bb90f8580c646cedbfc",
+    "current:ntfs_ace": "1fd2285302b0aea3384fb6fa7e6bdc63c964db33a0011434f998458a3ada1449",
+    "object_versions": "c6a5e919576930f059250b7e5001d681a4b20e4b9c0ab6317bee81ba28e31114",
+    "scan_runs": "dbebfc71583b0f4790825fae091bae1d36ae2e74bbaf14fa1d94e21b8e38c15a",
+    "scan_run_scopes": "07b53a0a69a7bef3a313f6f3999696bef8e62d91bb223439bece9063c43cd799",
+    "scan_run_errors": "208cc444377becb481c88e932d8d8d7b455b5eb708f7fd00dccaa5bcdb20afa9",
+    "risk_findings": "805ca46de30749c6df052afa760dd3e69c665e8cb4590c0b8fdc43761ef80aa5"
+  },
+  "duration_seconds": 108.707,
+  "ingest_seconds": 71.509
+}

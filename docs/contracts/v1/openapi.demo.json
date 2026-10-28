@@ -1,0 +1,599 @@
+{
+  "components": {
+    "schemas": {
+      "ComparisonSeedView": {
+        "description": "One point-in-time comparison the demo offers as a recovery drill (ADG-DEMO-03).\n\nTwo instants and a launch window, and nothing about the result: the page sends them to\n``GET /api/v1/changes/compare`` like any other comparison.",
+        "properties": {
+          "at_from": {
+            "format": "date-time",
+            "title": "At From",
+            "type": "string"
+          },
+          "at_to": {
+            "format": "date-time",
+            "title": "At To",
+            "type": "string"
+          },
+          "drill_window_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A deliberately short interactive window to launch with, in milliseconds.",
+            "title": "Drill Window Ms"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "question",
+          "at_from",
+          "at_to",
+          "summary"
+        ],
+        "title": "ComparisonSeedView",
+        "type": "object"
+      },
+      "DatasetView": {
+        "properties": {
+          "company_name": {
+            "title": "Company Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "facts": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Facts",
+            "type": "object"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "string"
+          },
+          "snapshot_date": {
+            "format": "date",
+            "title": "Snapshot Date",
+            "type": "string"
+          },
+          "synthetic": {
+            "default": true,
+            "title": "Synthetic",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "key",
+          "company_name",
+          "domain",
+          "snapshot_date",
+          "seed",
+          "description"
+        ],
+        "title": "DatasetView",
+        "type": "object"
+      },
+      "DemoView": {
+        "properties": {
+          "baseline_generations": {
+            "title": "Baseline Generations",
+            "type": "integer"
+          },
+          "comparisons": {
+            "description": "Point-in-time comparisons to run as a recovery drill, chosen by the dataset.",
+            "items": {
+              "$ref": "#/components/schemas/ComparisonSeedView"
+            },
+            "title": "Comparisons",
+            "type": "array"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/DatasetView"
+          },
+          "generations": {
+            "items": {
+              "$ref": "#/components/schemas/GenerationView"
+            },
+            "title": "Generations",
+            "type": "array"
+          },
+          "investigations": {
+            "description": "Guided access investigations to start from: one principal and one folder each, chosen by the dataset.",
+            "items": {
+              "$ref": "#/components/schemas/InvestigationSeedView"
+            },
+            "title": "Investigations",
+            "type": "array"
+          },
+          "mutation_policy": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyView"
+            },
+            "title": "Mutation Policy",
+            "type": "array"
+          },
+          "next_generation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The generation 'Run synthetic scan' would apply, or null when none remains.",
+            "title": "Next Generation"
+          },
+          "runtime_mode": {
+            "const": "demo",
+            "default": "demo",
+            "title": "Runtime Mode",
+            "type": "string"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioView"
+            },
+            "title": "Scenarios",
+            "type": "array"
+          }
+        },
+        "required": [
+          "dataset",
+          "generations",
+          "baseline_generations",
+          "next_generation",
+          "scenarios",
+          "mutation_policy"
+        ],
+        "title": "DemoView",
+        "type": "object"
+      },
+      "GenerationView": {
+        "properties": {
+          "applied": {
+            "title": "Applied",
+            "type": "boolean"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_baseline": {
+            "description": "Part of the canonical state a reset installs.",
+            "title": "In Baseline",
+            "type": "boolean"
+          },
+          "index": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "name",
+          "description",
+          "applied",
+          "in_baseline"
+        ],
+        "title": "GenerationView",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InvestigationSeedView": {
+        "description": "One access question the demo offers as a guided investigation (ADG-DEMO-02).\n\nThe pair to ask about, and nothing about the answer: the investigation page sends it to\n``GET /api/v1/access/explain`` like any other, and renders what the engine computes.",
+        "properties": {
+          "access_path": {
+            "enum": [
+              "remote_smb",
+              "local"
+            ],
+            "title": "Access Path",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "principal": {
+            "$ref": "#/components/schemas/ScenarioSubjectView"
+          },
+          "question": {
+            "title": "Question",
+            "type": "string"
+          },
+          "resource": {
+            "description": "UNC path of the folder the question is about.",
+            "title": "Resource",
+            "type": "string"
+          },
+          "scenarios": {
+            "description": "Keys of the scenarios this question belongs to.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Scenarios",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "question",
+          "principal",
+          "resource",
+          "access_path",
+          "summary",
+          "scenarios"
+        ],
+        "title": "InvestigationSeedView",
+        "type": "object"
+      },
+      "PolicyView": {
+        "properties": {
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "operation": {
+            "title": "Operation",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "treatment": {
+            "enum": [
+              "supported",
+              "simulated",
+              "unavailable"
+            ],
+            "title": "Treatment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "method",
+          "path",
+          "operation",
+          "treatment",
+          "reason"
+        ],
+        "title": "PolicyView",
+        "type": "object"
+      },
+      "ScanResultView": {
+        "properties": {
+          "generation": {
+            "title": "Generation",
+            "type": "string"
+          },
+          "notice": {
+            "default": "Synthetic scan: observations generated by the demo dataset and ingested through the ordinary collector routes. No directory or file server was contacted.",
+            "title": "Notice",
+            "type": "string"
+          },
+          "observations_applied": {
+            "title": "Observations Applied",
+            "type": "integer"
+          },
+          "risk_evaluated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Evaluated At"
+          },
+          "risk_findings_matched": {
+            "title": "Risk Findings Matched",
+            "type": "integer"
+          },
+          "runs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Runs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "generation",
+          "runs",
+          "observations_applied",
+          "risk_findings_matched",
+          "risk_evaluated_at"
+        ],
+        "title": "ScanResultView",
+        "type": "object"
+      },
+      "ScenarioSubjectView": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "person",
+              "group"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "sid": {
+            "title": "Sid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "sid"
+        ],
+        "title": "ScenarioSubjectView",
+        "type": "object"
+      },
+      "ScenarioView": {
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "related_resources": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Related Resources",
+            "type": "array"
+          },
+          "resource": {
+            "description": "UNC path of the folder the scenario is about.",
+            "title": "Resource",
+            "type": "string"
+          },
+          "subjects": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioSubjectView"
+            },
+            "title": "Subjects",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "title",
+          "summary",
+          "resource",
+          "subjects",
+          "related_resources"
+        ],
+        "title": "ScenarioView",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "The routes a demo deployment (ADG_RUNTIME_MODE=demo) serves in addition to openapi.json. A production deployment serves none of them.",
+    "summary": "Windows-domain share-access auditing and governance",
+    "title": "ADG API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/demo": {
+      "get": {
+        "operationId": "demo_overview_api_v1_demo_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemoView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "The demo dataset, its scan generations and the mutation policy",
+        "tags": [
+          "demo"
+        ]
+      }
+    },
+    "/api/v1/demo/scans": {
+      "post": {
+        "operationId": "run_scan_api_v1_demo_scans_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanResultView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "409": {
+            "description": "The baseline is missing, or no generation remains."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run the dataset's next synthetic scan generation",
+        "tags": [
+          "demo"
+        ]
+      }
+    }
+  }
+}

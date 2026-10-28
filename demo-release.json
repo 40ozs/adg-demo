@@ -1,0 +1,119 @@
+{
+  "schema": "genesee-press-demo-release/1",
+  "application": "adg",
+  "release_id": "genesee-press-2.1.0-1d585649e6cb",
+  "application_repository": "40ozs/adg",
+  "source_branch": "integration/SYNTH-CROSSAPP-01",
+  "application_upstream_sha": "1d585649e6cb103cb079dc40387dab9f1f613db2",
+  "synthetic_enterprise_repository": "40ozs/synthetic-enterprise",
+  "synthetic_enterprise_sha": "ce7c0c7d9fbc82c67e596dde95cf5e2432acf450",
+  "synthetic_enterprise_branch": "integration/SYNTH-CROSSAPP-01",
+  "synthetic_enterprise_report": "docs/demo/reports/SYNTH-CROSSAPP-01-report.md",
+  "synthetic_enterprise_report_commit": "296b528e5927f579f2513b6c43b750f50f1de8e8",
+  "synthetic_dataset_version": "2.1.0",
+  "synthetic_dataset": "synthetic-enterprise-world@2.1.0",
+  "synthetic_contract_version": "0.2.0",
+  "projection_version": "adg@0.3.0",
+  "vendoring_lock": {
+    "path": "backend/vendor/synthetic-enterprise/SYNTHETIC_ENTERPRISE.lock",
+    "commit": "ce7c0c7d9fbc82c67e596dde95cf5e2432acf450",
+    "sha256": "c1ea1ba74440ba571932079fc21f3674834b92a0cab31140e0333063143558b3",
+    "manifest_source_commit": "ee77411fb8667e3b2d7ba5ad098f84fa9c35d574"
+  },
+  "vendored_crosscheck": {
+    "files_checked": 9,
+    "differ": 0,
+    "missing": 0,
+    "against": "ce7c0c7d9fbc82c67e596dde95cf5e2432acf450"
+  },
+  "demo_repository": "40ozs/adg-demo",
+  "demo_branch": "main",
+  "generated_at": "2026-10-28T23:56:37Z",
+  "generated_at_note": "Input of the export, recorded here; reproduction re-uses it, so the tree is byte-identical.",
+  "exporter": {
+    "repository": "40ozs/synthetic-enterprise",
+    "path": "tools/cutover/demo_release.py",
+    "version": "1.0.0",
+    "tool_sha256": "a21a115a51d7ce169ec8fec2ac387f6eadd93025406d0b6677b9c85b6f33b0c6",
+    "verifier_sha256": "799e4ee88d4af2f1d6de490c6f522f1c6daab2a618d75c02facde22f6202a681",
+    "spec": "tools/cutover/specs/adg.json",
+    "spec_sha256": "68e4ed9b66350ca9ddeb3bade5e626b8d9a0317b6bd4f76b6ca8158dd7ff4bf2"
+  },
+  "selection": {
+    "source_files": 1144,
+    "released_files": 872,
+    "excluded_files": 272,
+    "excluded_sha256": "0894674c8a89d7bbd79fa13167363e674ecedd621552d5ecc71259d38d87549f"
+  },
+  "sanitization": {
+    "redactions": [],
+    "accepted_scan_findings": [
+      {
+        "rule": "hosted-hostname",
+        "path": "docs/deployment/cloudflare-demo.md",
+        "count": 3
+      },
+      {
+        "rule": "hosted-hostname",
+        "path": "frontend/tests/cloudflare/environment.test.ts",
+        "count": 9
+      },
+      {
+        "rule": "hosted-hostname",
+        "path": "frontend/tests/cloudflare/routing.test.ts",
+        "count": 6
+      },
+      {
+        "rule": "jwt",
+        "path": "backend/tests/test_logging_redaction.py",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "backend/tests/contracts/test_envelopes.py",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "backend/tests/test_logging_redaction.py",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "docs/contracts/v1/derived/examples/access-explanation.json",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "docs/contracts/v1/derived/examples/access-paths.json",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "frontend/tests/coverage-factories.ts",
+        "count": 1
+      },
+      {
+        "rule": "secret-assignment",
+        "path": "frontend/tests/explanation-factories.ts",
+        "count": 1
+      }
+    ]
+  },
+  "deployment": {
+    "hosted": true,
+    "platform": "Cloudflare Workers Free (Worker adg-demo-staging) + Render Free (web service adg-demo-web, docker/Dockerfile.render) + Supabase PostgreSQL (database adg_demo)",
+    "workflow": ".github/workflows/cloudflare-staging.yml (workflow_dispatch; GitHub environment cloudflare-staging)",
+    "deployment_branch": "main",
+    "dataset": "ADG_DEMO_DATASET=genesee-press-v1",
+    "expected": {
+      "demo_mode_fingerprint": "4667d3cfb4b574ffda3ac7ea8453912568b7517cd53548fb338b497e9b270f08",
+      "logical_fingerprint": "b4b93b65a77d895cbd0495d34865937bdab39596494bd3ca035ce8f8e59445d0",
+      "probes": "23/23",
+      "findings_open": 9386,
+      "employees": 2440,
+      "groups": 206,
+      "membership_edges": 4273
+    }
+  }
+}

@@ -1,0 +1,901 @@
+/*
+ * ADG application shell.
+ *
+ * Three things here are requirements rather than taste:
+ *
+ * - Focus is always visible. Auditors work through long tables from the keyboard, and a
+ *   focus ring removed for looks is a product they cannot use.
+ * - The layout collapses to a single column below 60rem. There is no horizontal page
+ *   scroll; only tables scroll, inside their own container.
+ * - State colors are never the only signal. Every status carries a word as well as a hue.
+ */
+
+:root {
+  --background: #0f1115;
+  --surface: #171a21;
+  --surface-raised: #1d212a;
+  --border: #262b36;
+  --border-strong: #3a4150;
+  --text: #e6e9ef;
+  --muted: #9aa3b2;
+  --accent: #6ea8ff;
+  --ok: #3fb950;
+  --warn: #d29922;
+  --bad: #f85149;
+  --warn-surface: #2a2113;
+  --bad-surface: #2b1517;
+  --info-surface: #13202e;
+  --focus: #ffd166;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* One rule, everywhere. Nothing below is allowed to remove it. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Visible only once focused: the first stop for a keyboard user on every page. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  padding: 0.6rem 1rem;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.shell-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.25rem;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand small {
+  display: block;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.shell-body {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  flex: 1;
+  align-items: start;
+}
+
+/* No navigation to place: signed-out and error views are one column at every width. */
+.shell-body-plain {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.shell-nav {
+  border-right: 1px solid var(--border);
+  padding: 1rem 0.75rem;
+  position: sticky;
+  top: 0;
+}
+
+.shell-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.shell-nav a {
+  display: block;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  border-left: 3px solid transparent;
+}
+
+.shell-nav a:hover {
+  background: var(--surface);
+}
+
+.shell-nav a[aria-current="page"] {
+  background: var(--surface-raised);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-badge {
+  margin-left: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0 0.4rem;
+}
+
+.shell-main {
+  padding: 1.5rem 1.25rem 3rem;
+  max-width: 64rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.shell-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 1rem 1.25rem;
+  margin-top: auto;
+}
+
+.search-form {
+  display: flex;
+  gap: 0.4rem;
+  flex: 1 1 18rem;
+  max-width: 28rem;
+}
+
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+input[type="search"],
+input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+}
+
+button,
+.button {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover,
+.button:hover {
+  border-color: var(--accent);
+}
+
+button[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.status-ok {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.status-bad {
+  color: var(--bad);
+  font-weight: 600;
+}
+
+.status-warn {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+/* Banners. The ARIA role is assigned in the markup, never inferred from the class. */
+.banner {
+  border: 1px solid var(--border-strong);
+  border-left-width: 4px;
+  border-radius: 6px;
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+.banner h2,
+.banner p {
+  margin: 0.15rem 0;
+}
+
+.banner h2 {
+  font-size: 1rem;
+}
+
+.banner-warning {
+  border-left-color: var(--warn);
+  background: var(--warn-surface);
+}
+
+.banner-error {
+  border-left-color: var(--bad);
+  background: var(--bad-surface);
+}
+
+.banner-info {
+  border-left-color: var(--accent);
+  background: var(--info-surface);
+}
+
+.banner-development {
+  border-left-color: var(--warn);
+  background: var(--warn-surface);
+  border-radius: 0;
+  margin: 0;
+  border-left-width: 0;
+  border-bottom: 2px solid var(--warn);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 34rem;
+}
+
+caption {
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+code {
+  background: var(--surface-raised);
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  font-size: 0.88em;
+  word-break: break-all;
+}
+
+dl.facts {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+  gap: 0.3rem 1rem;
+  margin: 0;
+}
+
+dl.facts dt {
+  color: var(--muted);
+}
+
+dl.facts dd {
+  margin: 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  flex-wrap: wrap;
+}
+
+/*
+ * The demo indicator. A labelled pill, not a banner: persistent and unmissable without
+ * covering the application it is describing. The word "Demo environment" carries the
+ * meaning; the color only reinforces it.
+ */
+.demo-indicator {
+  position: relative;
+  font-size: 0.82rem;
+}
+
+.demo-indicator summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--info-surface);
+  padding: 0.15rem 0.7rem;
+  list-style: none;
+}
+
+.demo-indicator summary::-webkit-details-marker {
+  display: none;
+}
+
+.demo-indicator strong {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.demo-indicator-detail {
+  color: var(--muted);
+}
+
+.demo-indicator-panel {
+  position: absolute;
+  z-index: 10;
+  margin-top: 0.4rem;
+  width: min(26rem, calc(100vw - 2.5rem));
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  background: var(--surface-raised);
+  padding: 0.75rem 1rem;
+}
+
+.demo-indicator-panel p {
+  margin: 0 0 0.5rem;
+}
+
+.demo-indicator-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.75rem;
+  margin: 0;
+}
+
+.demo-indicator-facts dt {
+  color: var(--muted);
+}
+
+.demo-indicator-facts dd {
+  margin: 0;
+}
+
+.demo-indicator-fact {
+  display: contents;
+}
+
+/* The demo guide (/demo): scenarios linked into the real pages. */
+.demo-scenarios {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.demo-scenario h3 {
+  margin-top: 0;
+}
+
+.demo-scenario-key {
+  display: inline-block;
+  min-width: 1.6rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.demo-scenario-subjects {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.demo-policy dt {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.demo-policy dd {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.role-pill {
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0 0.5rem;
+  font-size: 0.78rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 60rem) {
+  .shell-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell-nav {
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .shell-nav ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Detail views.
+ *
+ * The rule that matters below is the one separating `.layer-raw` from `.layer-effective`.
+ * A raw ACL entry and an effective-access result are different kinds of statement, and a
+ * reader who takes one for the other reaches the wrong conclusion about who can open a
+ * file. They therefore never share a frame: different tint, different border, and a word
+ * on each — because the tint alone is not a signal everybody receives.
+ */
+
+.title-kind {
+  font-size: 0.8em;
+  font-weight: 400;
+  color: var(--muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0 0.55rem;
+  vertical-align: middle;
+}
+
+/* ---------------------------------------------------------------- principals */
+
+.principal {
+  display: block;
+  min-width: 0;
+}
+
+.principal-name {
+  font-weight: 600;
+}
+
+.principal-qualifier {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/*
+ * A SID, key or path in a table: one line, a bounded width, never what sizes the table.
+ * The whole value is in the text and the `title`, and on screen while the row has focus.
+ */
+.identifier {
+  display: inline-block;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+/*
+ * A SID loses its start, not its distinguishing end: right-to-left puts the ellipsis on the
+ * left. Only for SIDs — all left-to-right characters, so they still read in order; a UNC
+ * path's leading backslashes would not.
+ */
+.identifier.sid {
+  direction: rtl;
+}
+
+/* A code value in a table (an access mask, a SID) is one token: it never breaks mid-value. */
+td code,
+th code,
+.nowrap {
+  white-space: nowrap;
+}
+
+tr:focus-within .identifier {
+  direction: ltr;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* An unresolved principal's SID under its last known name: its own short line (Identity.tsx). */
+.principal > .identifier {
+  display: block;
+  font-size: 0.78rem;
+}
+
+.principal-notes,
+.principal-kind {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------- badges */
+
+.badge {
+  display: inline-block;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.badge-allow {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.badge-deny {
+  border-color: var(--bad);
+  color: var(--bad);
+  font-weight: 600;
+}
+
+.badge-explicit {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.badge-inherited {
+  color: var(--muted);
+}
+
+.ace-deny > * {
+  /* A Deny is load-bearing and is never left to the badge alone to convey. */
+  background: color-mix(in srgb, var(--bad-surface) 60%, transparent);
+}
+
+.ace-notes {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+/* ---------------------------------------------------- raw facts vs. answers */
+
+.layer {
+  border: 1px solid var(--border);
+  border-left-width: 5px;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: var(--surface);
+}
+
+.layer-raw {
+  border-left-color: var(--border-strong);
+}
+
+.layer-effective {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--info-surface) 45%, var(--surface));
+}
+
+.layer-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.layer-header h2 {
+  margin: 0;
+}
+
+.layer-tag {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.05rem 0.6rem;
+}
+
+.layer-raw .layer-tag {
+  color: var(--muted);
+}
+
+.layer-effective .layer-tag {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.layer-caveat {
+  margin: 0.4rem 0 1rem;
+  font-size: 0.85rem;
+  max-width: 68ch;
+}
+
+/*
+  The rights line of a layer panel. A block, because `Rights` may emit a <div> note beneath
+  the mask and a <div> inside a <p> is invalid HTML — the browser reparents it and the note
+  drifts away from the rights it qualifies. Spaced like the <p> it replaced.
+*/
+.layer-rights {
+  margin: 1rem 0;
+}
+
+.acl-group {
+  margin-bottom: 1.5rem;
+}
+
+.acl-table td,
+.acl-table th,
+.access-table td,
+.access-table th {
+  vertical-align: top;
+}
+
+/* ------------------------------------------------------------------ verdicts */
+
+.verdict {
+  display: block;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.verdict-ok {
+  color: var(--ok);
+}
+
+.verdict-warn {
+  color: var(--warn);
+}
+
+.verdict-bad {
+  color: var(--bad);
+}
+
+.verdict-info {
+  color: var(--text);
+}
+
+/* The certainty never gets dropped, so it is styled rather than hidden. */
+.verdict-note {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+.via-list {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+/* ---------------------------------------------------------- tabs and paging */
+
+.tabs {
+  margin: 1.25rem 0 1rem;
+}
+
+.tabs nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs a,
+.filter-strip a {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  text-decoration: none;
+}
+
+.tabs a[aria-current="page"] {
+  background: var(--surface-raised);
+  border-color: var(--border);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tabs-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+}
+
+.filter-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.5rem 0 1rem;
+}
+
+/* A list of counts laid out as a strip: its disc markers sat on the previous count's last digit. */
+ul.filter-strip {
+  list-style: none;
+  padding-left: 0;
+}
+
+.filter-strip a {
+  border-radius: 999px;
+  border-color: var(--border);
+  font-size: 0.85rem;
+}
+
+.filter-strip a[aria-current] {
+  background: var(--surface-raised);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.pager {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.6rem;
+}
+
+.pager p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+}
+
+.pager-links {
+  display: flex;
+  gap: 1rem;
+}
+
+/* ---------------------------------------------------------------- breadcrumb */
+
+.breadcrumb ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  font-size: 0.88rem;
+}
+
+.breadcrumb li + li::before {
+  content: "›";
+  color: var(--muted);
+  margin-right: 0.35rem;
+}
+
+.breadcrumb [aria-current="page"] {
+  color: var(--muted);
+}
+
+/* A sortable column header: the header's own text, made a button. */
+.sort-button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  padding: 0;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.sort-button:hover {
+  color: var(--text);
+}
+
+.sort-indicator {
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+
+th[aria-sort] .sort-button {
+  color: var(--text);
+}
+
+th[aria-sort] .sort-indicator {
+  opacity: 1;
+}
