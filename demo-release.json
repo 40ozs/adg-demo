@@ -1,10 +1,10 @@
 {
   "schema": "genesee-press-demo-release/1",
   "application": "adg",
-  "release_id": "genesee-press-2.1.0-c723558fd6bf",
+  "release_id": "genesee-press-2.1.0-aebf16fcf594",
   "application_repository": "40ozs/adg",
-  "source_branch": "integration/SYNTH-CUTOVER-02",
-  "application_upstream_sha": "c723558fd6bfe56fdef4299c37fd4dfee1518a22",
+  "source_branch": "integration/SYNTH-HOSTED-CUTOVER-MAC-01",
+  "application_upstream_sha": "aebf16fcf5943e641638524f95ec2685bb0acf1c",
   "synthetic_enterprise_repository": "40ozs/synthetic-enterprise",
   "synthetic_enterprise_sha": "ce7c0c7d9fbc82c67e596dde95cf5e2432acf450",
   "synthetic_enterprise_branch": "integration/SYNTH-CROSSAPP-01",
@@ -28,7 +28,7 @@
   },
   "demo_repository": "40ozs/adg-demo",
   "demo_branch": "main",
-  "generated_at": "2026-10-29T01:09:39Z",
+  "generated_at": "2026-10-29T07:23:12Z",
   "generated_at_note": "Input of the export, recorded here; reproduction re-uses it, so the tree is byte-identical.",
   "exporter": {
     "repository": "40ozs/synthetic-enterprise",
@@ -37,7 +37,7 @@
     "tool_sha256": "662788415d5f2aa7141e48ff60d3d9f1debabc670b47ce375dc299526fd8c5a4",
     "verifier_sha256": "799e4ee88d4af2f1d6de490c6f522f1c6daab2a618d75c02facde22f6202a681",
     "spec": "tools/cutover/specs/adg.json",
-    "spec_sha256": "1cbf0206caa03c99a78457e6413ac5cc9faab53912fe7be943705303f01b61ef"
+    "spec_sha256": "cf52ce417af1ee50e93a9bc6d07bfb5da918218356a9173f559ed006f1023c48"
   },
   "selection": {
     "source_files": 1144,
