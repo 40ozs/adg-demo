@@ -22,13 +22,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Release tree equals demo-release/files.sha256; provenance; prohibited files
+      - name: "Release tree equals demo-release/files.sha256; provenance; prohibited files"
         run: python3 demo-release/verify_release.py
-      - name: Vendored Genesee Press projection matches its lock
-        working-directory: backend
-        run: python3 -c "from app.demo.genesee_press import vendor; vendor.verify(); print('vendored projection verified')"
-      - name: Genesee Press demo tests (no database)
+      - name: "Vendored Genesee Press projection matches its lock; Genesee Press demo tests (no database)"
         working-directory: backend
         run: |
           python3 -m pip install --quiet -e ".[dev]"
+          python3 -c "from app.demo.genesee_press import vendor; vendor.verify(); print('vendored projection verified')"
           python3 -m pytest -q -p no:cacheprovider tests/demo -m "not smoke"
