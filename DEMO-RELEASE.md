@@ -1,4 +1,4 @@
-# ADG demo release `genesee-press-2.1.0-559dbaf913a0`
+# ADG demo release `genesee-press-2.1.0-bb370f8e4531`
 
 This repository is a **one-way release mirror**. It is generated from a verified application
 integration commit and the Genesee Press synthetic world; it is not a development repository.
@@ -6,12 +6,12 @@ Changes are made upstream and arrive here only through a new release export.
 
 | | |
 |---|---|
-| Application source | `40ozs/adg` `integration/ADG-UX-WAVE-C-01` @ `559dbaf913a02e0df4ddf18be89ef81f03e48596` |
+| Application source | `40ozs/adg` `integration/ADG-UX-WAVE-D-01` @ `bb370f8e4531a15166006a1f79f9ca2d64e11a3a` |
 | Synthetic world | `40ozs/synthetic-enterprise` @ `ce7c0c7d9fbc82c67e596dde95cf5e2432acf450` |
 | Dataset / contract | `synthetic-enterprise-world@2.1.0` / `0.2.0` |
 | Projection | `adg@0.3.0` (lock `backend/vendor/synthetic-enterprise/SYNTHETIC_ENTERPRISE.lock`, commit `ce7c0c7d9fbc82c67e596dde95cf5e2432acf450`) |
 | Integration record | `docs/demo/reports/SYNTH-CROSSAPP-01-report.md` @ `296b528e5927f579f2513b6c43b750f50f1de8e8` |
-| Release generated | 2026-10-31T16:09:41Z by `tools/cutover/demo_release.py` (ADG-HOSTED-STREAMING-11) |
+| Release generated | 2026-10-31T18:24:16Z by `tools/cutover/demo_release.py` (ADG-WAVE-D-STAGING-RELEASE-01) |
 
 Machine-readable provenance: [`demo-release.json`](demo-release.json). Every file's digest:
 [`demo-release/files.sha256`](demo-release/files.sha256).
