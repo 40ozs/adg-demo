@@ -174,8 +174,8 @@ export function BulkDecisionBar({
       <h2 id="bulk">Answer the selected items together</h2>
       {chosen.length === 0 ? (
         <p className="muted">
-          Select items to answer several at once. A batch must be one question: one principal
-          across many targets, or one target across many principals.
+          Select items to answer several at once. A batch must be one question: one identity
+          across many targets, or one target across many identities.
         </p>
       ) : (
         <p>
@@ -274,7 +274,7 @@ export function SelectableItems({
         className="acl-table"
         caption={
           <>
-            {items.length.toLocaleString()} items. Each is one grant — a principal and a
+            {items.length.toLocaleString()} items. Each is one grant — an identity and a
             target — with every entry that creates it. Sorting orders the rows on this page.
           </>
         }
@@ -282,7 +282,7 @@ export function SelectableItems({
         rowHeader={canDecide ? 1 : 0}
         columns={[
           ...(canDecide ? [{ label: "Select", sortable: false }] : []),
-          { label: "Principal" },
+          { label: "Identity" },
           { label: "Target" },
           { label: "Entries", type: "number" },
           { label: "Certainty" },
@@ -326,7 +326,7 @@ export function SelectableItems({
                 href={`/governance/campaigns/${campaignId}?principal=${encodeURIComponent(
                   item.principal_key,
                 )}`}
-                title="Every grant this principal has in this campaign"
+                title="Every grant this identity has in this campaign"
               >
                 (all theirs)
               </a>

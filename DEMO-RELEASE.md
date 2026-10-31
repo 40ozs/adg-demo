@@ -1,4 +1,4 @@
-# ADG demo release `genesee-press-2.1.0-aebf16fcf594`
+# ADG demo release `genesee-press-2.1.0-559dbaf913a0`
 
 This repository is a **one-way release mirror**. It is generated from a verified application
 integration commit and the Genesee Press synthetic world; it is not a development repository.
@@ -6,12 +6,12 @@ Changes are made upstream and arrive here only through a new release export.
 
 | | |
 |---|---|
-| Application source | `40ozs/adg` `integration/SYNTH-HOSTED-CUTOVER-MAC-01` @ `aebf16fcf5943e641638524f95ec2685bb0acf1c` |
+| Application source | `40ozs/adg` `integration/ADG-UX-WAVE-C-01` @ `559dbaf913a02e0df4ddf18be89ef81f03e48596` |
 | Synthetic world | `40ozs/synthetic-enterprise` @ `ce7c0c7d9fbc82c67e596dde95cf5e2432acf450` |
 | Dataset / contract | `synthetic-enterprise-world@2.1.0` / `0.2.0` |
 | Projection | `adg@0.3.0` (lock `backend/vendor/synthetic-enterprise/SYNTHETIC_ENTERPRISE.lock`, commit `ce7c0c7d9fbc82c67e596dde95cf5e2432acf450`) |
 | Integration record | `docs/demo/reports/SYNTH-CROSSAPP-01-report.md` @ `296b528e5927f579f2513b6c43b750f50f1de8e8` |
-| Release generated | 2026-10-29T07:23:12Z by `tools/cutover/demo_release.py` (SYNTH-HOSTED-CUTOVER-MAC-01) |
+| Release generated | 2026-10-31T16:09:41Z by `tools/cutover/demo_release.py` (ADG-HOSTED-STREAMING-11) |
 
 Machine-readable provenance: [`demo-release.json`](demo-release.json). Every file's digest:
 [`demo-release/files.sha256`](demo-release/files.sha256).
@@ -45,9 +45,9 @@ history is included.
 
 The public demo staging (Cloudflare Worker `adg-demo-staging` → Render `adg-demo-web` → Supabase `adg_demo`)
 deploys **from this repository** with **Actions → Free staging (ADG demo) → Run workflow** on `main`
-([docs/deployment/cloudflare-demo.md](docs/deployment/cloudflare-demo.md)). The first deploy of this release
-runs with `bootstrap: true` and `confirm_reset: reset adg_demo`, because the hosted database still holds
-the previous dataset. Expected after the reset: Demo Mode fingerprint `4667d3cf…9b270f08`, logical
+([docs/deployment/cloudflare-demo.md](docs/deployment/cloudflare-demo.md)). This release keeps the Genesee
+Press lock and adds no migration, so it deploys with `bootstrap: false` over the existing dataset. Expected
+dataset (unchanged): Demo Mode fingerprint `4667d3cf…9b270f08`, logical
 fingerprint `b4b93b65…e59445d0`, probes 23/23, 9,386 open findings, 2,440 employees, 206 groups, 4,273
 membership edges.
 

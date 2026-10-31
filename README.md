@@ -665,9 +665,11 @@ same information from the browser's point of view.
 
 ## The web application
 
-`http://localhost:3000`. Sections: Overview, Resources, Identities, Access, Risks, Changes,
-Collectors, Settings — each shown only when the signed-in account holds
-the capability behind it.
+`http://localhost:3000`. Sections, in four groups: **Investigate** (Overview, Findings, Access,
+Changes), **Directory** (Identities, Resources), **Act** (Reviews, What-if) and **System**
+(Collectors, Settings) — each shown only when the signed-in account holds the capability
+behind it. Findings lives at `/risks`; the user-facing terms are fixed in
+[`docs/demo/reports/ADG-UX-01-information-architecture.md`](docs/demo/reports/ADG-UX-01-information-architecture.md).
 
 In development mode, sign in at `/login` and pick `viewer`, `auditor`, `admin`, `reviewer`
 or `governance` to see the
@@ -680,14 +682,27 @@ Four pages carry the everyday work, each reached from search or from a link on a
 
 | Page | URL | What it answers |
 | --- | --- | --- |
-| Principal | `/identities/principal?key=<SID or host\|SID>` | Who this user or group is, what it belongs to, what belongs to it, which share ACLs name it, and what it can reach |
+| Principal | `/identities/principal/<key>` or `/identities/principal/<key>/<view>` | Who this user or group is, what it belongs to, what belongs to it, which share ACLs name it, and what it can reach |
 | Server | `/resources/server?key=<host>` | What ADG knows about the machine, when a collector last reached it, and the shares it publishes |
 | Share | `/resources/share?key=<server\|share>` | Share metadata, the share ACL, the NTFS ACL of the directory it publishes, and who gets through both |
 | Directory | `/resources/directory?key=<UNC path>` | Where a directory sits, whether permissions changed there, the ACL digest, and who can reach it |
 
-Identifiers travel as query parameters rather than as path segments: a directory is named by
-its UNC path and a local group by `host|SID`, and `\` and `|` inside a URL *path* depend on
-the browser, the Next.js router, and the Node runtime agreeing about normalization.
+A principal's key — its SID, or `host|SID` for a computer-local principal — is one
+percent-encoded path segment (`|` becomes `%7C`), so that every view of one principal shares
+one layout and moving between views re-renders the view alone. The optional `<view>` segment
+is one of `members`, `effective-members`, `groups`, `effective-groups`, `shares`,
+`directories` or `acl-references`; the member views exist only where the principal can have
+members. Without it, the page opens the principal's first view: direct members for a group
+(or a principal of unknown kind), direct groups otherwise.
+
+The earlier address, `/identities/principal?key=…` (with the optional `tab=` and `host=`),
+is kept only so that links pasted into tickets still open the right principal: it redirects
+to the path form above. Link to the path form.
+
+Server, share and directory identifiers still travel as query parameters rather than as path
+segments: a directory is named by its UNC path and a share by `server|share`, and `\` and
+`|` inside a URL *path* depend on the browser, the Next.js router, and the Node runtime
+agreeing about normalization.
 
 Five properties of these pages are worth knowing before reading the code:
 
@@ -849,7 +864,7 @@ operator declares which resources are sensitive in `ADG_RISK_CONFIGURATION_PATH`
 reference and [`docs/architecture/risk-model.md`](docs/architecture/risk-model.md) for the
 model.
 
-The **Risks** page shows all of it, with the caveat that makes it readable: above the counts,
+The **Findings** page (`/risks`) shows all of it, with the caveat that makes it readable: above the counts,
 what the last evaluation actually covered. An empty table under *"the rules have never been
 evaluated"* means nothing has looked — which is the single most dangerous sentence this
 product could accidentally say, and the one it therefore says out loud. Each row opens an
