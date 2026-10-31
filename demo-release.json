@@ -28,13 +28,13 @@
   },
   "demo_repository": "40ozs/adg-demo",
   "demo_branch": "main",
-  "generated_at": "2026-10-31T18:24:16Z",
+  "generated_at": "2026-10-31T21:00:00Z",
   "generated_at_note": "Input of the export, recorded here; reproduction re-uses it, so the tree is byte-identical.",
   "exporter": {
     "repository": "40ozs/synthetic-enterprise",
     "path": "tools/cutover/demo_release.py",
     "version": "1.0.0",
-    "tool_sha256": "662788415d5f2aa7141e48ff60d3d9f1debabc670b47ce375dc299526fd8c5a4",
+    "tool_sha256": "e4142d38b68d4d3b67dd71612fb9a1e3733907e9508c1e3a0e58931302576d94",
     "verifier_sha256": "799e4ee88d4af2f1d6de490c6f522f1c6daab2a618d75c02facde22f6202a681",
     "spec": "tools/cutover/specs/adg.json",
     "spec_sha256": "c716a9ebd2fb232dd307f9c940c18f5ac60128a7ba381ffdd29d820702f0c156"
