@@ -40,7 +40,7 @@
     "spec_sha256": "96b4155242435c113f91b205a74d1d49c503e8e2ab089fd4590371f140475c0b",
     "templates": {
       ".github/workflows/hosted-verify.yml": "b87be02fcf4da962f92bcdef562c17fc167e4296d89bab55e06b6bee37f0fbb6",
-      "demo-release/read_only_db.py": "76ca91c9fb1e002196de07dbc1e50174ade316bf06c659c5055b17942ac55aef"
+      "demo-release/read_only_db.py": "8c691fd5834c3ccf9603c980d18a06edd5de287f5279fbe22a63d809bd424892"
     }
   },
   "selection": {

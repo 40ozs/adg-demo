@@ -71,6 +71,9 @@ def state() -> dict:
 
 
 def main(argv: list[str]) -> int:
+    # As `python -m` / `python -` would: the working directory (the image's /app/backend, whose vendor/ the
+    # projection lock resolves against), not this script's directory, comes first on the import path.
+    sys.path[0] = os.getcwd()
     if argv[:1] == ["state"]:
         print(json.dumps(state(), indent=1, sort_keys=True))
     elif argv[:2] == ["run", "-m"] and len(argv) > 2:
