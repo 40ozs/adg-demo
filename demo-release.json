@@ -34,10 +34,14 @@
     "repository": "40ozs/synthetic-enterprise",
     "path": "tools/cutover/demo_release.py",
     "version": "1.0.0",
-    "tool_sha256": "e4142d38b68d4d3b67dd71612fb9a1e3733907e9508c1e3a0e58931302576d94",
+    "tool_sha256": "ece3823561880ebf92c5cb3de6727c6b8a0c1d69a5167fb304012b0d3ea82001",
     "verifier_sha256": "799e4ee88d4af2f1d6de490c6f522f1c6daab2a618d75c02facde22f6202a681",
     "spec": "tools/cutover/specs/adg.json",
-    "spec_sha256": "c716a9ebd2fb232dd307f9c940c18f5ac60128a7ba381ffdd29d820702f0c156"
+    "spec_sha256": "96b4155242435c113f91b205a74d1d49c503e8e2ab089fd4590371f140475c0b",
+    "templates": {
+      ".github/workflows/hosted-verify.yml": "b87be02fcf4da962f92bcdef562c17fc167e4296d89bab55e06b6bee37f0fbb6",
+      "demo-release/read_only_db.py": "76ca91c9fb1e002196de07dbc1e50174ade316bf06c659c5055b17942ac55aef"
+    }
   },
   "selection": {
     "source_files": 1526,
@@ -114,6 +118,7 @@
       "employees": 2440,
       "groups": 206,
       "membership_edges": 4273
-    }
+    },
+    "verification_workflow": ".github/workflows/hosted-verify.yml (workflow_dispatch; read-only; never deploys)"
   }
 }

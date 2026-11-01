@@ -54,3 +54,17 @@ membership edges.
 Owner prerequisites (one time, outside Git): the GitHub environment `cloudflare-staging` in this
 repository with the secrets and variables listed in the deployment guide §4; the Render service
 `adg-demo-web` connected to `40ozs/adg-demo`, branch `main`, auto-deploy off, `ADG_DEMO_DATASET=genesee-press-v1`.
+
+## Hosted verification without deploying
+
+**Actions → Hosted verification (ADG demo) → Run workflow** checks the demo that is deployed now and changes
+nothing (ADG-HOSTED-VERIFY-NODEPLOY-01). It reconciles the live Render deploy and Worker version with the
+release history (`40ozs/synthetic-enterprise` `tools/cutover/hosted_identity.py`; a newer deployment passes only
+if an authorized release lane recorded it), checks the source topology, runs Demo Mode verify, the logical
+fingerprint and the open-findings count against this release's expected values with every database session
+forced read-only ([`demo-release/read_only_db.py`](demo-release/read_only_db.py)), then the HTTP smoke and
+the browser gate, and finally re-reads the deployment to show it did not change. It has no deploy, bootstrap,
+reset or migration step and reads `ADG_DATABASE_URL`, `RENDER_API_KEY`, `CLOUDFLARE_API_TOKEN` and
+`SE_READ_SSH_KEY` (read-only) from the `cloudflare-staging` environment without creating a deployment record.
+Failures are classed by job: identity (source topology or release provenance), checks (dataset contract, smoke,
+browser), unchanged (the deployment moved during the run).
